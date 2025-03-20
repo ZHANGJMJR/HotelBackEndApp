@@ -17,6 +17,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using System.Data.Common;
+using System.Runtime.InteropServices;
 
 public class GuestCheckDetailsSumRow
 {
@@ -260,6 +261,8 @@ public class Dlt
         }
         LogHelper.Info("=== The data cleaning is complete. ===");
     }
+
+   // [UnmanagedCallersOnly(EntryPoint = "SyncData")]
 
     public void SyncData(String argCurrentDateStr = "2025-03-14")
     {

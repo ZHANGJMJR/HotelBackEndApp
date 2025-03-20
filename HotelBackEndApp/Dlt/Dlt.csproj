@@ -1,10 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	<SaveEncoding>utf-8</SaveEncoding>
+	 <OutputType>Library</OutputType> 
+    <TargetFramework>net8.0</TargetFramework>
+    <PublishAot>true</PublishAot> 
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier> 
   </PropertyGroup>
 
 </Project>
+

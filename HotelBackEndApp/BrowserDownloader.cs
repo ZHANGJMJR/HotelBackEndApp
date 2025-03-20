@@ -62,7 +62,7 @@ namespace HotelBackEndApp
                     Accuracy = 100,
                 },
                 RecordVideoDir = "videos/",
-                RecordVideoSize = new RecordVideoSize() { Width = 1820, Height = 1080 },
+                RecordVideoSize = new RecordVideoSize() { Width = 1920, Height = 1080 },
             });
             var page = await context.NewPageAsync();
             var browserOptions = new BrowserTypeLaunchOptions

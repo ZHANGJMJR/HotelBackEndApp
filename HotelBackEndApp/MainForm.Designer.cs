@@ -103,19 +103,19 @@
             statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
-            // 
+
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             toolStripStatusLabel1.Size = new Size(100, 17);
             toolStripStatusLabel1.Text = "System Running";
-            toolStripStatusLabel1.Click += toolStripStatusLabel1_Click;
+            //toolStripStatusLabel1.Click += toolStripStatusLabel1_Click;
             // 
             // toolStripProgressBar1
-            // 
+
             toolStripProgressBar1.Name = "toolStripProgressBar1";
             toolStripProgressBar1.Size = new Size(100, 16);
             toolStripProgressBar1.Step = 5;
             toolStripProgressBar1.Value = 100;
-            toolStripProgressBar1.Click += toolStripProgressBar1_Click;
+           // toolStripProgressBar1.Click += toolStripProgressBar1_Click;
             // 
             // toolStripSplitButton1
             // 
@@ -149,6 +149,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
             Text = "HotelBackEnd";
+            FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
             Shown += MainForm_Load;
             statusStrip1.ResumeLayout(false);

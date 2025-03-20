@@ -14,7 +14,6 @@ public static class LogHelper
         var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
         XmlConfigurator.Configure(logRepository, new FileInfo("log.config"));
     }
-
     // 记录信息日志
     public static void Info(string message)
     {

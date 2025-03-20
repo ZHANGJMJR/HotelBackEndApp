@@ -33,7 +33,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+	</Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -42,5 +42,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
+<ItemGroup>
+  <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+</ItemGroup>
 </Project>
