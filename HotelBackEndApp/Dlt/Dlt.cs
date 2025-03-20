@@ -95,40 +95,7 @@ public static class SqlEncryptor
         } 
     } 
         
-    public static string EncryptSql(string sql)
-    {
-        if (string.IsNullOrEmpty(sql)) throw new ArgumentNullException(nameof(sql));
-
-        try
-        {
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = GetSHA256Key(aesKey);
-                aesAlg.IV = Encoding.UTF8.GetBytes(aesIV);
-                aesAlg.Mode = CipherMode.CBC;
-                aesAlg.Padding = PaddingMode.PKCS7;
-
-                using (MemoryStream msEncrypt = new MemoryStream())
-                using (ICryptoTransform encryptor = aesAlg.CreateEncryptor())
-                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                {
-                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                    {
-                        swEncrypt.Write(sql);
-                        swEncrypt.Flush();  // ✅ 确保数据被写入
-                    }
-
-                    return Convert.ToBase64String(msEncrypt.ToArray()); // ✅ `msEncrypt` 仍然可用
-                }
-
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"⚠ encry failed: {ex.Message}");
-            return null;
-        }
-    }
+    
 
     public static string DecryptSql(string encryptedSql)
     {
@@ -262,9 +229,8 @@ public class Dlt
         LogHelper.Info("=== The data cleaning is complete. ===");
     }
 
-   // [UnmanagedCallersOnly(EntryPoint = "SyncData")]
 
-    public void SyncData(String argCurrentDateStr = "2025-03-14")
+    public  void SyncData(String argCurrentDateStr = "2025-03-14")
     {
         string currentDateStr = argCurrentDateStr;
         DeleteDataByDate(currentDateStr, getMysqlConnectStr());

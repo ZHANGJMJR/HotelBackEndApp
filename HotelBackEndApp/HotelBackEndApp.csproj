@@ -7,7 +7,12 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
 	<SaveEncoding>utf-8</SaveEncoding>
+	<ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="logo.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AntdUI" Version="1.9.4" />
