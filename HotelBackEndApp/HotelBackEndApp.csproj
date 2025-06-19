@@ -6,8 +6,9 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-	<SaveEncoding>utf-8</SaveEncoding>
-	<ApplicationIcon>logo.ico</ApplicationIcon>
+    
+  <SaveEncoding>utf-8</SaveEncoding>
+  <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,7 +39,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-	</Compile>
+  </Compile>
   </ItemGroup>
 
   <ItemGroup>

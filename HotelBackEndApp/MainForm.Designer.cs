@@ -43,7 +43,7 @@
             // 
             // start_btn
             // 
-            start_btn.Image = Properties.Resources.start;
+            start_btn.Image = (Image)resources.GetObject("start_btn.Image");
             start_btn.ImageAlign = ContentAlignment.MiddleLeft;
             start_btn.Location = new Point(633, 41);
             start_btn.Name = "start_btn";
@@ -69,7 +69,7 @@
             // 
             // exe_btn
             // 
-            exe_btn.Image = Properties.Resources.execute;
+            exe_btn.Image = (Image)resources.GetObject("exe_btn.Image");
             exe_btn.ImageAlign = ContentAlignment.MiddleLeft;
             exe_btn.Location = new Point(633, 235);
             exe_btn.Name = "exe_btn";
@@ -103,19 +103,17 @@
             statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
-
+            // 
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             toolStripStatusLabel1.Size = new Size(100, 17);
             toolStripStatusLabel1.Text = "System Running";
-            //toolStripStatusLabel1.Click += toolStripStatusLabel1_Click;
             // 
             // toolStripProgressBar1
-
+            // 
             toolStripProgressBar1.Name = "toolStripProgressBar1";
             toolStripProgressBar1.Size = new Size(100, 16);
             toolStripProgressBar1.Step = 5;
             toolStripProgressBar1.Value = 100;
-           // toolStripProgressBar1.Click += toolStripProgressBar1_Click;
             // 
             // toolStripSplitButton1
             // 

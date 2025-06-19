@@ -1,5 +1,6 @@
 ﻿using AntdUI;
 using Dlt;
+using Microsoft.VisualBasic.ApplicationServices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,7 +34,7 @@ namespace HotelBackEndApp
         {
             // 创建托盘菜单
             trayMenu = new ContextMenuStrip();
-            startItem= new ToolStripMenuItem("Start", null, start_btn_Click);
+            startItem = new ToolStripMenuItem("Start", null, start_btn_Click);
             stopItem = new ToolStripMenuItem("Stop", null, stop_btn_Click);
             executeItem = new ToolStripMenuItem("Execute", null, exe_btn_Click);
             exitItem = new ToolStripMenuItem("Exit", null, OnExitClick);
@@ -77,13 +78,13 @@ namespace HotelBackEndApp
             QuartzScheduler.Start(".", Dlt.Dlt.getMysqlConnectStr(), DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1));
             if (QuartzScheduler.IsSchedulerRunning())
             {
-                stop_btn.Enabled = true;stopItem.Enabled = true;
-                start_btn.Enabled = false;startItem.Enabled = false;
+                stop_btn.Enabled = true; stopItem.Enabled = true;
+                start_btn.Enabled = false; startItem.Enabled = false;
             }
             else
             {
-                stop_btn.Enabled = false;stopItem.Enabled = false;
-                start_btn.Enabled = true;startItem.Enabled = true;
+                stop_btn.Enabled = false; stopItem.Enabled = false;
+                start_btn.Enabled = true; startItem.Enabled = true;
             }
             //trayMenu.Refresh();
             trayMenu.Invalidate(); // 🔹 强制重绘菜单
@@ -97,7 +98,7 @@ namespace HotelBackEndApp
             if (QuartzScheduler.IsSchedulerRunning())
             {
                 stop_btn.Enabled = true; stopItem.Enabled = true;
-                start_btn.Enabled = false;startItem.Enabled = false;
+                start_btn.Enabled = false; startItem.Enabled = false;
             }
             else
             {
@@ -116,7 +117,7 @@ namespace HotelBackEndApp
             DateTime startDate = datePickerRange1.Value[0];
             DateTime endDate = datePickerRange1.Value[1];
             Dlt.Dlt dlt = new Dlt.Dlt();
-
+            LogHelper.Info(Dlt.Dlt.getMysqlConnectStr());
             if (dlt.CheckExist(startDate, endDate) > 0)
             {
                 if (MessageBox.Show(@$"检测到 {startDate.ToString("yyyy-MM-dd")} 至 {endDate.ToString("yyyy-MM-dd")} 数据已存在，是否覆盖？", "数据重复",
@@ -142,10 +143,29 @@ namespace HotelBackEndApp
                 return Enumerable.Range(0, (end - start).Days + 1)
                                  .Select(offset => start.AddDays(offset));
             }
-
-            string csvFilePath = await new BrowserDownloader(".", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd")).DownloadFileAsync();
-
-            dlt.ImportCsvToMySQL(csvFilePath, Dlt.Dlt.getMysqlConnectStr()); // 执行 CSV 导入
+            Dictionary<string,string> filePath = await new BrowserDownloader(".", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd")).DownloadFileAsync();
+            string csvFilePath = filePath["details"]??"";
+            string csvOrderListFilePathzip = filePath["orderlistzip"]??"";
+            string csvOrderListFilePathUnzip = filePath["orderlistunzip"] ?? "";
+            if (filePath is null || filePath.Count == 0)
+            {
+                LogHelper.Info("BrowserDownloader  filepath is null...");
+            }
+            if(csvFilePath.Length>0) // 导入商品销售明细
+            {
+                LogHelper.Info("🚀 导入商品销售明细...");
+                dlt.ImportCsvToMySQL(csvFilePath, Dlt.Dlt.getMysqlConnectStr()); // 执行 CSV 导入商品销售明细
+            }
+            if (csvOrderListFilePathzip.Length > 0) // 上传到数据库中订单列表.zip
+            {
+                LogHelper.Info("🚀 upload to database 订单列表...");
+                dlt.ImportCsvToMySQL(csvOrderListFilePathzip, Dlt.Dlt.getMysqlConnectStr()); // 传到数据库中订单列表
+            }
+            if (csvOrderListFilePathUnzip.Length > 0) // 导入订单列表.csv
+            {
+                LogHelper.Info("🚀 upload to database 订单列表...");
+                dlt.ImportCsvToMySQL(csvOrderListFilePathUnzip, Dlt.Dlt.getMysqlConnectStr()); // 执行 CSV 导入订单列表
+            }
             this.exe_btn.Enabled = true;
             LogHelper.Info("🚀立即 结束...");
             toolStripProgressBar1.MarqueeAnimationSpeed = 0;
@@ -162,13 +182,13 @@ namespace HotelBackEndApp
             datePickerRange1.Value = dt_tmp;
             if (QuartzScheduler.IsSchedulerRunning())
             {
-                stop_btn.Enabled = true;stopItem.Enabled = true;
-                start_btn.Enabled = false;startItem.Enabled = false;
+                stop_btn.Enabled = true; stopItem.Enabled = true;
+                start_btn.Enabled = false; startItem.Enabled = false;
             }
             else
             {
-                stop_btn.Enabled = false;stopItem.Enabled = false;
-                start_btn.Enabled = true;startItem.Enabled = true;
+                stop_btn.Enabled = false; stopItem.Enabled = false;
+                start_btn.Enabled = true; startItem.Enabled = true;
             }
         }
 
@@ -188,12 +208,14 @@ namespace HotelBackEndApp
             this.Hide();       // 隐藏窗口
         }
 
-    
+
         private void OnExitClick(object sender, EventArgs e)
         {
             trayIcon.Visible = false;  // 退出前隐藏托盘图标
             this.Dispose();
             Application.Exit();
         }
+
+       
     }
 }

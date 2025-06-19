@@ -16,6 +16,7 @@ public class SyncJob : IJob
         // 1️⃣ 读取外部传入的参数
         JobDataMap dataMap = context.JobDetail.JobDataMap;
         string csvFilePath = dataMap.GetString("CsvFilePath");
+        string csvOrderListFilePath = "";
         string mysqlConnectionString = dataMap.GetString("MySQLConnectionString");
         DateTime startDate = dataMap.GetDateTime("startDate");
         DateTime endDate = dataMap.GetDateTime("endDate");
@@ -36,9 +37,20 @@ public class SyncJob : IJob
             dlt.SyncData(date.ToString("yyyy-MM-dd"));
         }
         // 需要添加，自动下载数据
-        csvFilePath = await new BrowserDownloader(".", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd")).DownloadFileAsync();
-
-        dlt.ImportCsvToMySQL(csvFilePath, mysqlConnectionString); // 执行 CSV 导入
+        // 需要添加，自动下载数据
+        Dictionary<string, string> filePath = await new BrowserDownloader(".", startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd")).DownloadFileAsync();
+        csvFilePath = filePath["details"]??"";
+        csvOrderListFilePath = filePath["orderlistunzip"] ??"";
+        if(csvFilePath.Length>0) {
+            LogHelper.Info($"✅ 导入 商品销售明细：{DateTime.Now}");
+            dlt.ImportCsvToMySQL(csvFilePath, mysqlConnectionString); // 执行 CSV 导入 商品销售明细
+        }else LogHelper.Info($"✅  商品销售明细 无数据：{DateTime.Now}");
+        if (csvOrderListFilePath.Length > 0)
+        {
+            LogHelper.Info($"✅ 导入 订单列表：{DateTime.Now}");
+            dlt.ImportCsvToMySQL(csvOrderListFilePath, mysqlConnectionString); // 执行 CSV 导入 导入订单列表
+        }
+        else LogHelper.Info($"✅  订单列表 无数据：{DateTime.Now}");
 
         LogHelper.Info($"✅ scheduler任务执行完成：{DateTime.Now}");
         //return await Task.CompletedTask;
