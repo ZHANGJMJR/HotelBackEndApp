@@ -682,6 +682,47 @@ VALUES  (@organizationID, @checkNum, @tableRef, @openDatetime, @duration,@numGue
 
                 }
                 LogHelper.Info("从表数据同步完成");
+
+                LogHelper.Info("menu数据同步---开始");
+                string clearSql = "TRUNCATE TABLE MENU_ITEM_STRING;";
+                using (var cmd = new MySqlCommand(clearSql, mysqlConn))
+                {
+                    cmd.ExecuteNonQuery();
+                    LogHelper.Info("menu数据清理");
+                }
+                string menuSelectSql = "SELECT * FROM LOCATION_ACTIVITY_DB.MENU_ITEM_STRING";
+                using (var oracleCmd = new OracleCommand(menuSelectSql, oracleConn))
+                {
+                    using (var oracleReader = oracleCmd.ExecuteReader())
+                    {
+                        
+                            string insertSql = "INSERT INTO MENU_ITEM_STRING VALUES (@MITRANSLATIONID, @ORGANIZATIONID, @LOCATIONID, @POSLANGUAGEID, @MENUITEMID, @MENUITEMNAME1, @MENUITEMNAME1MASTER, @MENUITEMNAME2, @MENUITEMNAME2MASTER, @FAMILYGROUPNAMEMASTER, @MAJORGROUPNAMEMASTER);";
+                            while (oracleReader.Read())
+                            {
+                                using (var mysqlCmd = new MySqlCommand(insertSql, mysqlConn))
+                                {
+                                    // 假设表结构中列的顺序与INSERT语句中的参数顺序一致
+                                    mysqlCmd.Parameters.AddWithValue("@MITRANSLATIONID", oracleReader["MITRANSLATIONID"]);
+                                    mysqlCmd.Parameters.AddWithValue("@ORGANIZATIONID", oracleReader["ORGANIZATIONID"]);
+                                    mysqlCmd.Parameters.AddWithValue("@LOCATIONID", oracleReader["LOCATIONID"]);
+                                    mysqlCmd.Parameters.AddWithValue("@POSLANGUAGEID", oracleReader["POSLANGUAGEID"]);
+                                    mysqlCmd.Parameters.AddWithValue("@MENUITEMID", oracleReader["MENUITEMID"]);
+                                    mysqlCmd.Parameters.AddWithValue("@MENUITEMNAME1", oracleReader["MENUITEMNAME1"]);
+                                    mysqlCmd.Parameters.AddWithValue("@MENUITEMNAME1MASTER", oracleReader["MENUITEMNAME1MASTER"]);
+                                    mysqlCmd.Parameters.AddWithValue("@MENUITEMNAME2", oracleReader["MENUITEMNAME2"]);
+                                    mysqlCmd.Parameters.AddWithValue("@MENUITEMNAME2MASTER", oracleReader["MENUITEMNAME2MASTER"]);
+                                    mysqlCmd.Parameters.AddWithValue("@FAMILYGROUPNAMEMASTER", oracleReader["FAMILYGROUPNAMEMASTER"]);
+                                    mysqlCmd.Parameters.AddWithValue("@MAJORGROUPNAMEMASTER", oracleReader["MAJORGROUPNAMEMASTER"]);
+
+                                    mysqlCmd.ExecuteNonQuery();
+                                }
+                            }
+                        
+                    }
+                }
+
+                LogHelper.Info("menu数据同步完成");
+
             }
             catch (Exception ex)
             {
